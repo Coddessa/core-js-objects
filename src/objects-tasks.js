@@ -17,8 +17,8 @@
  *    shallowCopy({a: 2, b: { a: [1, 2, 3]}}) => {a: 2, b: { a: [1, 2, 3]}}
  *    shallowCopy({}) => {}
  */
-function shallowCopy(/* obj */) {
-  throw new Error('Not implemented');
+function shallowCopy(obj) {
+  return { ...obj };
 }
 
 /**
@@ -32,8 +32,13 @@ function shallowCopy(/* obj */) {
  *    mergeObjects([{a: 1, b: 2}, {b: 3, c: 5}]) => {a: 1, b: 5, c: 5}
  *    mergeObjects([]) => {}
  */
-function mergeObjects(/* objects */) {
-  throw new Error('Not implemented');
+function mergeObjects(objects) {
+  return objects.reduce((accumulator, obj) => {
+    Object.entries(obj).forEach(([k, val]) => {
+      accumulator[k] = accumulator[k] ? accumulator[k] + val : val;
+    });
+    return accumulator;
+  }, {});
 }
 
 /**
@@ -49,8 +54,14 @@ function mergeObjects(/* objects */) {
  *    removeProperties({name: 'John', age: 30, city: 'New York'}, 'age') => {name: 'John', city: 'New York'}
  *
  */
-function removeProperties(/* obj, keys */) {
-  throw new Error('Not implemented');
+function removeProperties(obj, keys) {
+  const keysSet = new Set(Array.isArray(keys) ? keys : [keys]);
+  return Object.entries(obj).reduce((nObj, [k, val]) => {
+    if (!keysSet.has(k)) {
+      return { ...nObj, [k]: val };
+    }
+    return nObj;
+  }, {});
 }
 
 /**
@@ -65,8 +76,31 @@ function removeProperties(/* obj, keys */) {
  *    compareObjects({a: 1, b: 2}, {a: 1, b: 2}) => true
  *    compareObjects({a: 1, b: 2}, {a: 1, b: 3}) => false
  */
-function compareObjects(/* obj1, obj2 */) {
-  throw new Error('Not implemented');
+function compareObjects(obj1, obj2) {
+  if (obj1 === obj2) {
+    return true;
+  }
+  if (
+    typeof obj1 !== 'object' ||
+    typeof obj2 !== 'object' ||
+    obj1 === null ||
+    obj2 === null
+  ) {
+    return false;
+  }
+  const a = Object.keys(obj1);
+  const b = Object.keys(obj2);
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  let equal = true;
+  a.forEach((key) => {
+    if (obj1[key] !== obj2[key]) {
+      equal = false;
+    }
+  });
+  return equal;
 }
 
 /**
