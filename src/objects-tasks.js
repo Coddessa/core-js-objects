@@ -238,8 +238,8 @@ function Rectangle(width, height) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 /**
@@ -253,8 +253,10 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  const x = JSON.parse(json);
+  Object.setPrototypeOf(x, proto);
+  return x;
 }
 
 /**
@@ -283,8 +285,14 @@ function fromJSON(/* proto, json */) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  *    ]
  */
-function sortCitiesArray(/* arr */) {
-  throw new Error('Not implemented');
+function sortCitiesArray(arr) {
+  return arr.sort((x, y) => {
+    if (x.country === y.country) {
+      return x.city.localeCompare(y.city);
+    }
+
+    return x.country.localeCompare(y.country);
+  });
 }
 
 /**
@@ -317,8 +325,19 @@ function sortCitiesArray(/* arr */) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  return array.reduce((map, i) => {
+    const k = keySelector(i);
+    const val = valueSelector(i);
+
+    if (!map.has(k)) {
+      map.set(k, []);
+    }
+
+    map.get(k).push(val);
+
+    return map;
+  }, new Map());
 }
 
 /**
@@ -374,7 +393,6 @@ function group(/* array, keySelector, valueSelector */) {
  *
  *  For more examples see unit tests.
  */
-
 const cssSelectorBuilder = {
   element(/* value */) {
     throw new Error('Not implemented');
