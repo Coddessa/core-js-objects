@@ -114,8 +114,8 @@ function compareObjects(obj1, obj2) {
  *    isEmptyObject({}) => true
  *    isEmptyObject({a: 1}) => false
  */
-function isEmptyObject(/* obj */) {
-  throw new Error('Not implemented');
+function isEmptyObject(obj) {
+  return Object.keys(obj).length === 0;
 }
 
 /**
@@ -134,8 +134,8 @@ function isEmptyObject(/* obj */) {
  *    immutableObj.newProp = 'new';
  *    console.log(immutableObj) => {a: 1, b: 2}
  */
-function makeImmutable(/* obj */) {
-  throw new Error('Not implemented');
+function makeImmutable(obj) {
+  return Object.freeze(obj);
 }
 
 /**
@@ -148,8 +148,21 @@ function makeImmutable(/* obj */) {
  *    makeWord({ a: [0, 1], b: [2, 3], c: [4, 5] }) => 'aabbcc'
  *    makeWord({ H:[0], e: [1], l: [2, 3, 8], o: [4, 6], W:[5], r:[7], d:[9]}) => 'HelloWorld'
  */
-function makeWord(/* lettersObject */) {
-  throw new Error('Not implemented');
+function makeWord(lettersObject) {
+  const maxPos = Math.max(...Object.values(lettersObject).flat(), 0);
+
+  const resArr = new Array(maxPos + 1).fill('');
+
+  Object.keys(lettersObject).forEach((lett) => {
+    const positions = lettersObject[lett];
+    positions.forEach((position) => {
+      if (position >= 0 && position < resArr.length) {
+        resArr[position] = lett;
+      }
+    });
+  });
+
+  return resArr.join('');
 }
 
 /**
@@ -166,8 +179,32 @@ function makeWord(/* lettersObject */) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  let x25 = 0;
+  let x50 = 0;
+
+  return queue.every((bill) => {
+    if (bill === 25) {
+      x25 += 1;
+    } else if (bill === 50) {
+      if (x25 > 0) {
+        x25 -= 1;
+        x50 += 1;
+      } else {
+        return false;
+      }
+    } else if (bill === 100) {
+      if (x50 > 0 && x25 > 0) {
+        x50 -= 1;
+        x25 -= 1;
+      } else if (x25 >= 3) {
+        x25 -= 3;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  });
 }
 
 /**
@@ -183,8 +220,12 @@ function sellTickets(/* queue */) {
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+  this.getArea = function () {
+    return this.width * this.height;
+  };
 }
 
 /**
